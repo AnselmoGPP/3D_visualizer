@@ -1,0 +1,46 @@
+# cd /home/hank/dev/visual/_BUILD
+# cmake -G"Unix Makefiles" ..
+
+# CMake entry point
+cmake_minimum_required (VERSION 3.0)
+project (hans_visualizer)
+
+find_package(OpenGL REQUIRED)
+#find_package(glfw3 3.3 REQUIRED)
+
+MESSAGE(STATUS "OPENGL_LIBRARY: " ${OPENGL_LIBRARY})
+
+# include_directories()
+# add_subdirectory()
+
+add_definitions(
+	-DTW_STATIC
+	-DTW_NO_LIB_PRAGMA
+	-DTW_NO_DIRECT3D
+	-DGLEW_STATIC
+	-D_CRT_SECURE_NO_WARNINGS
+)
+
+## visualizer_class -----------------------------------------------------------
+
+ADD_LIBRARY(visualizer_class STATIC
+	src/main.cpp
+	src/controls.hpp
+	src/controls.cpp
+	src/shader.hpp
+	src/shader.cpp
+	src/visualizerClass.hpp
+	src/visualizerClass.cpp
+	src/ColorFragmentShader.fragmentshader
+	src/TransformVertexShader.vertexshader
+)
+
+# Link the include files (.h)
+target_include_directories( visualizer_class PUBLIC
+	../OGL_libs/glfw-3.3/include
+	../OGL_libs/glm-0.9.9.5
+	../OGL_libs/glew-2.1.0/include
+	src
+)
+
+install(TARGETS visualizer_class DESTINATION ${CURRENT_CMAKE_DIR}/bin)

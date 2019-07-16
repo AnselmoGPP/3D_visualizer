@@ -1,0 +1,54 @@
+# cd home/hank/dev/OGL/Shaper/src
+# cmake -G"Unix Makefiles" ..
+
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT (Shaper)
+
+FIND_PACKAGE(OpenGL REQUIRED)
+
+ADD_DEFINITIONS(
+	-DTW_STATIC
+	-DTW_NO_LIB_PRAGMA
+	-DTW_NO_DIRECT3D
+	-DGLEW_STATIC
+	-D_CRT_SECURE_NO_WARNINGS
+)
+
+ADD_EXECUTABLE(${PROJECT_NAME}
+	src/main.cpp
+)
+
+# Includes (.h) ----------------------------------
+
+TARGET_INCLUDE_DIRECTORIES( ${PROJECT_NAME} PUBLIC
+	${PROJECT_SOURCE_DIR}/../hans_visualizer/hans_visual/src
+	${PROJECT_SOURCE_DIR}/../hans_visualizer/extern/glfw/glfw-3.3/include
+	${PROJECT_SOURCE_DIR}/../hans_visualizer/extern/glew/glew-2.1.0/include
+	${PROJECT_SOURCE_DIR}/../hans_visualizer/extern/glm/glm-0.9.9.5
+#	${PROJECT_SOURCE_DIR}/../../boost_1_70_0
+)	
+
+# Libraries (.a) ---------------------------------
+
+# Needed for Boost library. If we, instead, do this with FILE(GLOB...) -> TARGET_INCLUDE_DIRECTORIES(...), debug and release libs will be mixed and compiler will be confused.
+TARGET_LINK_DIRECTORIES( ${PROJECT_NAME} PUBLIC
+	../../boost_1_70_0/_BUILD/lib
+)
+
+TARGET_LINK_LIBRARIES( ${PROJECT_NAME} 
+	optimized	${OPENGL_LIBRARY} 
+	optimized	${PROJECT_SOURCE_DIR}/../hans_visualizer/_BUILD/hans_visual/libhans_visual.a
+	optimized	${PROJECT_SOURCE_DIR}/../hans_visualizer/_BUILD/extern/glfw/glfw-3.3/src/libglfw3.a
+	optimized	${PROJECT_SOURCE_DIR}/../hans_visualizer/_BUILD/lib/libGLEW.a
+	optimized	${PROJECT_SOURCE_DIR}/../hans_visualizer/_BUILD/extern/glm/glm-0.9.9.5/glm/libglm_static.a
+	-lGL -lGLU -lXrandr -lXext -lX11 -lrt -ldl -lpthread -lm
+#	optimized	Boost library
+)
+
+#TARGET_LINK_LIBRARIES( ${PROJECT_NAME} 
+#	debug		${OPENGL_LIBRARY} 
+#	debug		${PROJECT_SOURCE_DIR}/../visualizer/_BUILD/libvisualizer_class.a
+#	debug		${PROJECT_SOURCE_DIR}/../OGL_libs/glfw-3.3/_BUILD/src/libglfw3.a
+#	debug		${PROJECT_SOURCE_DIR}/../OGL_libs/glew-2.1.0/lib/libGLEW.a
+#	debug		${PROJECT_SOURCE_DIR}/../OGL_libs/glm-0.9.9.5/_BUILD/glm/libglm_static.a
+#)

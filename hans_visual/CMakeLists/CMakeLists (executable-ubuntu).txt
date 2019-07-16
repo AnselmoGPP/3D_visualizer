@@ -1,0 +1,65 @@
+# cd /home/hank/dev/OGL/visualizer/_BUILD
+# cmake -G"Unix Makefiles" ..
+
+# CMake entry point
+cmake_minimum_required (VERSION 3.0)
+project (hans_visualizer)
+
+find_package(OpenGL REQUIRED)
+#find_package(glfw3 3.3 REQUIRED)
+
+# Generate a list of all files that match the globbing expressions and store it into the variable. In this case, all the compiled libraries.
+file(GLOB all_libs 
+    ../OGL_libs/glfw-3.3/_BUILD/src/*.a
+    ../OGL_libs/glm-0.9.9.5/_BUILD/glm/*.a
+    ../OGL_libs/glew-2.1.0/lib/*.a
+)
+
+set(ALL_LIBS
+	${OPENGL_LIBRARY}
+	${all_libs}
+	-lGL -lGLU -lXrandr -lXext -lX11 -lrt -ldl -lpthread -lm
+	#glfw
+	#GLEW_1130
+)
+
+MESSAGE(STATUS "OPENGL_LIBRARY: " ${OPENGL_LIBRARY})
+
+# include_directories()
+# add_subdirectory()
+
+add_definitions(
+	-DTW_STATIC
+	-DTW_NO_LIB_PRAGMA
+	-DTW_NO_DIRECT3D
+	-DGLEW_STATIC
+	-D_CRT_SECURE_NO_WARNINGS
+)
+
+## visualizer_class -----------------------------------------------------------
+
+#ADD_LIBRARY(visualizer_class STATIC
+ADD_EXECUTABLE(visualizer_class 
+	src/main.cpp
+	src/controls.hpp
+	src/controls.cpp
+	src/shader.hpp
+	src/shader.cpp
+	src/visualizerClass.hpp
+	src/visualizerClass.cpp
+	src/ColorFragmentShader.fragmentshader
+	src/TransformVertexShader.vertexshader
+)
+
+# Link the include files (.h)
+target_include_directories( visualizer_class PUBLIC
+	../OGL_libs/glfw-3.3/include
+	../OGL_libs/glm-0.9.9.5
+	../OGL_libs/glew-2.1.0/include
+	src
+)	
+
+# Link the compiled libraries
+target_link_libraries(visualizer_class ${ALL_LIBS})
+
+install(TARGETS visualizer_class DESTINATION ${CURRENT_CMAKE_DIR}/bin)
