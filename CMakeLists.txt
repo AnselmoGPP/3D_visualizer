@@ -1,5 +1,7 @@
-# cd /home/hank/dev/visual/_BUILD
+# cd /home/username/dev/visual/_BUILD
 # cmake -G"Unix Makefiles" ..
+# cmake -G"Visual Studio 15 2017 Win64" ..
+# cmake -G"Visual Studio 15 2017 Win32" ..
 
 CMAKE_MINIMUM_REQUIRED (VERSION 3.0)
 PROJECT (hans_visualizer)

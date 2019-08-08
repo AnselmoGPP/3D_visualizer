@@ -1,5 +1,6 @@
-# cd /home/hank/dev/visual/_BUILD
+# cd /home/username/dev/visual/_BUILD
 # cmake -G"Unix Makefiles" ..
+# cmake -G"Visual Studio 15 2017 Win64" ..
 
 cmake_minimum_required (VERSION 3.0)
 project (hans_visual)
@@ -30,8 +31,6 @@ ADD_LIBRARY(${PROJECT_NAME} STATIC
 	src/shader.cpp
 	src/visualizerClass.hpp
 	src/visualizerClass.cpp
-	src/ColorFragmentShader.fragmentshader
-	src/TransformVertexShader.vertexshader
 )
 
 # Link the include files (.h)
@@ -39,7 +38,7 @@ target_include_directories( ${PROJECT_NAME} PUBLIC
 	../extern/glfw/glfw-3.3/include
 	../extern/glm/glm-0.9.9.5
 	../extern/glew/glew-2.1.0/include
-	src
+	../extern/imgui/imgui-1.72b
 )
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ${CURRENT_CMAKE_DIR}/bin)
