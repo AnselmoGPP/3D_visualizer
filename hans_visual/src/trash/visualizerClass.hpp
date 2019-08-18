@@ -19,8 +19,6 @@
 *       - Dynamic allocation of data (vertex, lines, cubes)
 *       > Spherical Camera
 *		- Allow to draw disconnected lines
-*		- Try to statically draw a grid and axis arrows
-*		- Be careful with static variables. They may make multiple windows problematic
 */
 
 #include <stdio.h>
@@ -45,7 +43,7 @@ using namespace glm;
 #include "controls.hpp"
 
 struct pnt3D {
-    float x, y, z;
+	float x, y, z;
 
     pnt3D(float a = 0, float b = 0, float c = 0) : x(a), y(b), z(c) { }
 
@@ -64,19 +62,17 @@ struct cube3D {
 };
 
 // Define some maximum number of elements:
-#define NUM_OF_VERTEX   2500
-#define NUM_OF_LINES    500
-#define NUM_OF_CUBES    100
+#define NUM_OF_VERTEX 2500
+#define NUM_OF_LINES 500
+#define NUM_OF_CUBES 100
+#define WINDOW_WIDTH 1024
+#define WINDOW_HEIGHT 768
+
+// Choose only one camera system from the following:
+#define FPS 1
+#define SPHERE 0
 
 class visualizerClass {
-
-    controls &cam{camera};
-
-    std::mutex mut_points, mut_cubes, mut_lines;
-
-    GLFWwindow* window;			// The window object used to draw
-
-    int run_thread();			// The thread where the visualizer is run
 
     // Points data
     float points_buffer[NUM_OF_VERTEX][3];          // Stores all the coordinates of all the points
@@ -116,6 +112,12 @@ class visualizerClass {
     size_t cubes_to_print = 0;
     float cubes_colors_buffer[NUM_OF_CUBES][12*3][4];
 
+	std::mutex mut_points, mut_cubes, mut_lines;
+	
+	GLFWwindow* window;			// The window object used to draw
+
+	int run_thread();			// The thread where the visualizer is run
+
     // Parameters: X, Y (cube's center), x, y (point), rot (radians). It considers x as OpenGL's x, and y as OpenGL's -z.
     void rotation_H(float &x, float &y, float X, float Y, float rot) {
 
@@ -138,8 +140,6 @@ public:
     float points_alpha_channel = 1.0;
     float cubes_alpha_channel  = 0.3;
 	float lines_alpha_channel  = 1.0;
-
-    visualizerClass()  { }
 
 	// Create a window and open a new thread that runs the visualizer
 	int run() {

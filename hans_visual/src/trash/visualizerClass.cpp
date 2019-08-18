@@ -43,7 +43,9 @@ int visualizerClass::run_thread() {
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 */
 
-    cam.adjustments(window);
+	
+	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);					// Ensure we can capture the escape key being pressed below
+	if(FPS) glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);		// Hide the mouse and enable unlimited movement. Use GLFW_CURSOR_DISABLED/HIDDEN/NORMAL. 
 
 	// Set the mouse at the center of the screen
 	glfwPollEvents();
@@ -56,17 +58,13 @@ int visualizerClass::run_thread() {
 
     glEnable(GL_CULL_FACE);						// Cull triangles which normal is not towards the camera.    glDisable(GL_CULL_FACE);
 
-	// Enable blending
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 	glEnable(GL_PROGRAM_POINT_SIZE);			// Enable GL_POINTS
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 	glPointSize(5.0);
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glLineWidth(2.0);
-	GLfloat lineWidthRange[2];
+	GLfloat lineWidthRange[1];
 	glGetFloatv(GL_ALIASED_LINE_WIDTH_RANGE, lineWidthRange);
 
 
@@ -161,15 +159,19 @@ int visualizerClass::run_thread() {
 	GLuint linescolors;
 	glGenBuffers(1, &linescolors);
 
+    // Enable blending
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	do {
 		// Use our shader
 		glUseProgram(programID);
 
 		// Compute the MVP matrix from keyboard and mouse input
-        cam.computeMatricesFromInputs(window);
-        glm::mat4 ProjectionMatrix = cam.getProjectionMatrix();
-        glm::mat4 ViewMatrix = cam.getViewMatrix();
-        glm::mat4 ModelMatrix = glm::mat4(1.0);                     // Identity matrix
+		computeMatricesFromInputs_spherical(window);
+		glm::mat4 ProjectionMatrix = getProjectionMatrix();
+		glm::mat4 ViewMatrix = getViewMatrix();
+		glm::mat4 ModelMatrix = glm::mat4(1.0);			// Identity matrix
 		glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
 
 		// Send our transformation to the currently bound shader, in the "MVP" uniform

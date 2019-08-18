@@ -15,13 +15,13 @@ int main(){
 	visualizerClass visual;
 	visual.run();                                   // Open a visualizer window
 
-	// Draw points ------------------------------
+    // Draw points ------------------------------
     float icos[12][3];
     icosahedron(2, &icos[0]);						// Fill the icos[] array with points coordinates (in this case 12 points, with 3 coordinates each)
 
     visual.send_data_as_array(12, &icos[0][0]);     // Load the points on the visualizer. You can also load them from a vector<vector<pnt3D>> using:   visual.send_data_as_vector(cluster_set);
 
-	// Draw cubes -------------------------------
+    // Draw cubes -------------------------------
     cube3D myCubes[3] = {
             cube3D(0, 0, 0, 1, 1, 1, 0.0*3.1415, 0),
             cube3D(1, 1, 1, 2, 1, 0.5, 0.3*3.1415, 0),
@@ -30,25 +30,25 @@ int main(){
 
     visual.send_cubes(2, myCubes);                  // Load boxes on the visualizer
 
-	// Draw lines -------------------------------
-	float join_points[9][3] = {
-		-3,  3,  3,
-		-3, -3,  3,
-		 3, -3,  3,
-		 3,  3,  3,
-		 3,  3, -3,
-		 3, -3, -3,
-		-3, -3, -3,
-		-3,  3, -3,
-		-3,  3,  3
-	};
-	
-	visual.send_lines(9, &join_points[0][0]);					// Load points that will be used to draw lines
+    // Draw lines -------------------------------
+    float join_points[9][3] = {
+        -3,  3,  3,
+        -3, -3,  3,
+         3, -3,  3,
+         3,  3,  3,
+         3,  3, -3,
+         3, -3, -3,
+        -3, -3, -3,
+        -3,  3, -3,
+        -3,  3,  3
+    };
 
-	float pol_3th[101][3];
-	pol_3th_degree(&pol_3th[0][0], -10, 10, 100, 0, 1, 1, 0);	// Fill the pol_3th array 
-	
-	visual.send_lines(101, &pol_3th[0][0]);						// This erases the previous lines-buffer and draws a new one
+    visual.send_lines(9, &join_points[0][0]);					// Load points that will be used to draw lines
+
+    float pol_3th[101][3];
+    pol_3th_degree(&pol_3th[0][0], -10, 10, 100, 0, 1, 1, 0);	// Fill the pol_3th array
+
+    visual.send_lines(101, &pol_3th[0][0]);						// This erases the previous lines-buffer and draws a new one
 
     std::this_thread::sleep_for(std::chrono::seconds(60));
 }
