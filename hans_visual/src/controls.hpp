@@ -12,10 +12,10 @@
 class controls;
 extern controls camera;
 
-class controls{
+class controls {
     // Time
-    double lastTime = 0.0;
-    double currentTime;
+    float lastTime = 0.0;
+    float currentTime;
     float deltaTime;
 
     // Mouse
@@ -32,6 +32,8 @@ class controls{
     float mouseSpeed;
     glm::vec3 sphere_center;
     float radius;
+    float scroll_speed;
+    float minimum_radius;
 
     int camera_mode;
     glm::mat4 ViewMatrix;
@@ -48,13 +50,12 @@ public:
     glm::mat4 getViewMatrix();
     glm::mat4 getProjectionMatrix();
 
-    friend void mouseButtonCallback( GLFWwindow *window, int button, int action, int mods);
-
+    friend void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods);
+    friend void scrollCallback(GLFWwindow *window, double xOffset, double yOffset);
 };
 
 // Callback functions: Get mouse click - Get mouse out/in window - Get cursor position
-void mouseButtonCallback( GLFWwindow *window, int button, int action, int mods);
-void cursorEnterCallback(GLFWwindow *window, int entered);
-void cursorPositionCallback(GLFWwindow *window, double xPos, double yPos);
+void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods);
+void scrollCallback(GLFWwindow *window, double xOffset, double yOffset);
 
 #endif

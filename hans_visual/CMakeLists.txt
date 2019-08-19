@@ -14,12 +14,14 @@ MESSAGE(STATUS "OPENGL_LIBRARY: " ${OPENGL_LIBRARY})
 # add_subdirectory()
 
 add_definitions(
-	-DTW_STATIC
-	-DTW_NO_LIB_PRAGMA
-	-DTW_NO_DIRECT3D
-	-DGLEW_STATIC
-	-D_CRT_SECURE_NO_WARNINGS
+#	-DTW_STATIC
+#	-DTW_NO_LIB_PRAGMA
+#	-DTW_NO_DIRECT3D
+#	-DGLEW_STATIC
+#	-D_CRT_SECURE_NO_WARNINGS
 )
+
+add_compile_definitions(IMGUI_IMPL_OPENGL_LOADER_GLEW=1)
 
 ## visualizer_class -----------------------------------------------------------
 
@@ -31,6 +33,13 @@ ADD_LIBRARY(${PROJECT_NAME} STATIC
 	src/shader.cpp
 	src/visualizerClass.hpp
 	src/visualizerClass.cpp
+	
+	../extern/imgui/imgui-1.72b/imgui.cpp
+	../extern/imgui/imgui-1.72b/imgui_demo.cpp
+	../extern/imgui/imgui-1.72b/imgui_draw.cpp
+	../extern/imgui/imgui-1.72b/imgui_widgets.cpp
+	../extern/imgui/imgui-1.72b/examples/imgui_impl_glfw.cpp
+	../extern/imgui/imgui-1.72b/examples/imgui_impl_opengl3.cpp
 )
 
 # Link the include files (.h)
