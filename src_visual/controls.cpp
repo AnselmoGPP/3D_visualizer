@@ -5,14 +5,13 @@ using namespace glm;
 #include "controls.hpp"
 #include <iostream>
 #include <cmath>
-#include <iomanip>
 
 controls camera(SPHERE);
 
 controls::controls(int mode) : camera_mode(mode) {
 
 	if (camera_mode == FPS) {
-        position = glm::vec3(0, 15, 0);     // Initial position : on +Z use (0, 0, 5)
+		position = glm::vec3(0, 14, 0);	// Initial position : on +Z use (0, 0, 5)
 		horizontalAngle = 3.14f;			// Initial horizontal angle : toward -Z use 3.14f
 		verticalAngle = -3.14f / 2;			// Initial vertical angle : for none use 0
 		initialFoV = 45.0f;					// Initial Field of View
@@ -32,7 +31,6 @@ controls::controls(int mode) : camera_mode(mode) {
 		L_pressed = false;   R_pressed = false;
 		scroll_speed = 1;
 		minimum_radius = 1;
-        right_speed = 0.1;
 	}
 }
 
@@ -40,9 +38,9 @@ glm::mat4 controls::getViewMatrix() { return ViewMatrix; }
 glm::mat4 controls::getProjectionMatrix() { return ProjectionMatrix; }
 
 void controls::computeMatricesFromInputs(GLFWwindow* window) {
-    if      (camera_mode == FPS) computeMatricesFromInputs_FPS(window);
+	if (camera_mode == FPS) computeMatricesFromInputs_FPS(window);
 	else
-        if  (camera_mode == SPHERE) computeMatricesFromInputs_spherical(window);
+		if (camera_mode == SPHERE) computeMatricesFromInputs_spherical(window);
 }
 
 // FPS controls - Reads the keyboard and mouse and computes the Projection and View matrices. Use GLFW_CURSOR_DISABLED
@@ -72,7 +70,7 @@ void controls::computeMatricesFromInputs_FPS(GLFWwindow* window) {
 		cos(verticalAngle) * cos(horizontalAngle)
 	);
 
-    // >>> Right vector (right from center, taking z as X, and x as Y) (y = 0)
+	// >>> Right vector
 	glm::vec3 right = glm::vec3(
 		sin(horizontalAngle - 3.14f / 2.0f),
 		0,
@@ -134,16 +132,15 @@ void controls::computeMatricesFromInputs_spherical(GLFWwindow* window) {
 	// Detect pressed and released button actions
 	glfwSetMouseButtonCallback(window, mouseButtonCallback);        // The callback function is run only when the mouse left-button is pressed or released
 
-    // Get the cursor position only when right or left mouse buttons are pressed
-    if (L_pressed)
-    {
+	if (L_pressed)
+	{
 		glfwGetCursorPos(window, &xpos, &ypos);		// Another option using callback:	glfwSetCursorPosCallback(window, cursorPositionCallback);
 	}
 
 	// Compute angular movement over the sphere
-    horizontalAngle -= mouseSpeed * float(xpos - xpos0);
-    verticalAngle -= mouseSpeed * float(ypos - ypos0);
-    //std::cout << horizontalAngle << " / " << verticalAngle << std::endl;
+	horizontalAngle -= mouseSpeed * float(xpos - xpos0);
+	verticalAngle -= mouseSpeed * float(ypos - ypos0);
+
 	glfwSetScrollCallback(window, scrollCallback);
 
 	// Get the position over the sphere
@@ -154,24 +151,22 @@ void controls::computeMatricesFromInputs_spherical(GLFWwindow* window) {
 	// Direction towards the center of the sphere
 	glm::vec3 direction = (sphere_center - position) / radius;
 
-    // Right vector (right from center, taking z as X, and x as Y) (y=0) (used for calculating the Up vector)
+	// Right vector (y=0) (used for calculating the Up vector)
 	glm::vec3 right = glm::vec3(sin(horizontalAngle - 3.14f / 2.0f),
-                                0,
-                                cos(horizontalAngle - 3.14f / 2.0f));
+		0,
+		cos(horizontalAngle - 3.14f / 2.0f));
 
 	// Up vector
 	glm::vec3 up = glm::cross(right, direction);
 
 	if (R_pressed)
-    {
+	{
 		glfwGetCursorPos(window, &xpos, &ypos);
 
 		// Front vector (y=0) (used for moving the sphere center)
-        glm::vec3 front = glm::vec3(    sin(horizontalAngle + 3.14f),
-                                        0,
-                                        cos(horizontalAngle + 3.14f) );
+		glm::vec3 front = glm::vec3(cos(horizontalAngle), 0, sin(horizontalAngle));
 
-        sphere_center += right_speed * ( (-right * float(xpos - xpos0)) + (front * float(-ypos + ypos0)) );
+		sphere_center = (right * float(xpos - xpos0)) + (front * float(ypos - ypos0));
 	}
 	
 	// >>> View matrix

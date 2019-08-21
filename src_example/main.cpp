@@ -68,9 +68,7 @@ int main() {
 
 	visual.send_lines(111, &two_lines[0][0]);					// Send lines and draw them
 
-    //std::this_thread::sleep_for(std::chrono::seconds(60));
-    std::cin >> i;
-    return 0;
+	std::this_thread::sleep_for(std::chrono::seconds(60));
 }
 
 void icosahedron(float side_length, float(*points)[3]) {

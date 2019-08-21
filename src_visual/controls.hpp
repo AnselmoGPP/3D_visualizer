@@ -34,7 +34,6 @@ class controls {
 	float radius;
 	float scroll_speed;
 	float minimum_radius;
-    float right_speed;
 
 	int camera_mode;
 	glm::mat4 ViewMatrix;

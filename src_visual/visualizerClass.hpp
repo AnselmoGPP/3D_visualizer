@@ -17,16 +17,10 @@
 *		> GUI: Implement Stop (turn-off), Continue, show/quit boxes, show/quit points...
 *		- Implement transparency option
 *       - Dynamic allocation of data (vertex, lines, cubes)
-*       - Cubes complete rotation (rotation method for a point)
-*		- Draw axis
+*       > Spherical Camera
+*		- Allow to draw disconnected lines
 *		- Try to statically draw a grid and axis arrows
 *		- Be careful with static variables. They may make multiple windows problematic
-*       - Parameters window (toolbar) (camera, transparency, axis...)
-*       - Data window
-*       - Categories arrays
-*       - Colors arrays optional
-*       - Shaper with loop and without it
-*       - Enter checkbox names
 */
 
 #include <stdio.h>
