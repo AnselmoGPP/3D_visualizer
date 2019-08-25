@@ -20,11 +20,11 @@ controls::controls(int mode) : camera_mode(mode) {
 		mouseSpeed = 0.001f;
 	}
 	else if (camera_mode == SPHERE) {
-		//position = glm::vec3( 0, 14, 0 );
+		//position = glm::vec3( 0, 15, 0 );
 		horizontalAngle = 0.0f;
 		verticalAngle = 3.14f / 2;
 		initialFoV = 45.0f;
-		speed = 5;
+		speed = 5.f;
 		mouseSpeed = 0.008f;
 
 		sphere_center = glm::vec3(0, 0, 0);
@@ -32,7 +32,7 @@ controls::controls(int mode) : camera_mode(mode) {
 		L_pressed = false;   R_pressed = false;
 		scroll_speed = 1;
 		minimum_radius = 1;
-        right_speed = 0.1;
+        right_speed = 0.001;
 	}
 }
 
@@ -101,8 +101,8 @@ void controls::computeMatricesFromInputs_FPS(GLFWwindow* window) {
 
 	float FoV = initialFoV;// - 5 * glfwGetMouseWheel(); // Now GLFW 3 requires setting up a callback for this. It's a bit too complicated, so here it's disabled instead.
 
-	// >>> Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-	ProjectionMatrix = glm::perspective(glm::radians(FoV), 4.0f / 3.0f, 0.1f, 100.0f);
+	// >>> Projection matrix : 45° Field of View, 4:3 ratio, Display range (near/far clipping plane) : 0.1 unit <-> 100 units
+	ProjectionMatrix = glm::perspective(glm::radians(FoV), 4.0f / 3.0f, 0.1f, 1000.0f);
 	// >>> Camera matrix
 	ViewMatrix = glm::lookAt(
 		position,           // Camera is here
@@ -124,7 +124,7 @@ void controls::computeMatricesFromInputs_spherical(GLFWwindow* window) {
 
 	// >>> Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
 	float FoV = initialFoV;    //float FoV = - 5 * glfwGetMouseWheel();
-	ProjectionMatrix = glm::perspective(glm::radians(FoV), 4.0f / 3.0f, 0.1f, 100.0f);
+	ProjectionMatrix = glm::perspective(glm::radians(FoV), 4.0f / 3.0f, 0.1f, 1000.0f);
 
 
 	// Get current time and time difference
@@ -132,7 +132,7 @@ void controls::computeMatricesFromInputs_spherical(GLFWwindow* window) {
 	//deltaTime = float(currentTime - lastTime);
 
 	// Detect pressed and released button actions
-	glfwSetMouseButtonCallback(window, mouseButtonCallback);        // The callback function is run only when the mouse left-button is pressed or released
+	glfwSetMouseButtonCallback(window, mouseButtonCallback);        // The callback function is run only when the mouse left/middle/right-button is pressed or released
 
     // Get the cursor position only when right or left mouse buttons are pressed
     if (L_pressed)
@@ -171,7 +171,14 @@ void controls::computeMatricesFromInputs_spherical(GLFWwindow* window) {
                                         0,
                                         cos(horizontalAngle + 3.14f) );
 
-        sphere_center += right_speed * ( (-right * float(xpos - xpos0)) + (front * float(-ypos + ypos0)) );
+        sphere_center += right_speed * radius * ( (-right * float(xpos - xpos0)) + (front * float(-ypos + ypos0)) );
+	}
+
+	if (scroll_pressed) 
+	{
+		glfwGetCursorPos(window, &xpos, &ypos);
+
+		sphere_center += right_speed * radius * ((-right * float(xpos - xpos0)) + (up * float(ypos - ypos0)));
 	}
 	
 	// >>> View matrix
@@ -196,6 +203,7 @@ void controls::adjustments(GLFWwindow *window) {
 // Callback functions ----------------------------
 
 void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods) {
+
 	if		(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
 	{
 		camera.L_pressed = false;
@@ -214,6 +222,17 @@ void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods) {
 	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
 	{
 		camera.R_pressed = true;
+		glfwGetCursorPos(window, &camera.xpos0, &camera.ypos0);
+		camera.ypos = camera.ypos0;
+		camera.xpos = camera.xpos0;
+	}
+	else if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_RELEASE)
+	{
+		camera.scroll_pressed = false;
+	}
+	else if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS)
+	{
+		camera.scroll_pressed = true;
 		glfwGetCursorPos(window, &camera.xpos0, &camera.ypos0);
 		camera.ypos = camera.ypos0;
 		camera.xpos = camera.xpos0;

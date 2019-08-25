@@ -39,7 +39,7 @@ int main(void)
     fillVec(vec);
 
     visualizerClass obj;
-	obj.run();
+    obj.open_window();
 
     for (;;) {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));

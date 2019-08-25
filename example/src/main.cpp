@@ -6,19 +6,66 @@
 
 // Pass a pointer of an array[12][3] to store the icosahedron vertices
 void icosahedron(float side_length, float(*points)[3]);
-// This represents the function [ y(x) = a + bx + cx^2 + dx^3 ]. It outputs the y value for the inclusive range [xmin, xmax] (including extremes)
-void pol_3th_degree(float *results_array, float xmin, float xmax, float sample, float a, float b, float c, float d);
 
 int main() {
 
 	visualizerClass visual;
-	visual.run();                                   // Open a visualizer window
+    visual.open_window();                                   // Open a visualizer window
 
 	// Draw points ------------------------------
-	float icos[12][3];
-	icosahedron(2, &icos[0]);						// Fill the icos[] array with points coordinates (in this case 12 points, with 3 coordinates each)
+    float pnts[12][3];
+    icosahedron(2, &pnts[0]);						// Fill the icos[] array with points coordinates (in this case 12 points, with 3 coordinates each)
+    float points_categories[12] = { 0,1,2,3,4,5,6,7,8,10,10,10 };
+    float points_colors[12][3] = {
+		1.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 1.0f,
+		0.0f, 0.0f, 1.0f,
+		0.0f, 0.0f, 1.0f,
+		0.0f, 0.0f, 1.0f
+	};
+    float points_gradients[12] = {1,2,3,4,5,6,7,8,9,10,11,12};
+    float points_gradient_palette[21][3] = {
+        0.0f, 0.0f, 0.00f,
+        0.0f, 0.0f, 0.05f,
+        0.0f, 0.0f, 0.10f,
+        0.0f, 0.0f, 0.15f,
+        0.0f, 0.0f, 0.20f,
+        0.0f, 0.0f, 0.25f,
+        0.0f, 0.0f, 0.30f,
+        0.0f, 0.0f, 0.35f,
+        0.0f, 0.0f, 0.40f,
+        0.0f, 0.0f, 0.45f,
+        0.0f, 0.0f, 0.50f,
+        0.0f, 0.0f, 0.55f,
+        0.0f, 0.0f, 0.60f,
+        0.0f, 0.0f, 0.65f,
+        0.0f, 0.0f, 0.70f,
+        0.0f, 0.0f, 0.75f,
+        0.0f, 0.0f, 0.80f,
+        0.0f, 0.0f, 0.85f,
+        0.0f, 0.0f, 0.90f,
+        0.0f, 0.0f, 0.95f,
+        0.0f, 0.0f, 1.00f
+    };
 
-	visual.send_data_as_array(12, &icos[0][0]);     // Load the points on the visualizer. You can also load them from a vector<vector<pnt3D>> using:   visual.send_data_as_vector(cluster_set);
+    // >>> Different ways of drawing points
+    //visual.send_data_as_array(12, &icos[0][0]);       // Load the points on the visualizer. You can also load them from a vector<vector<pnt3D>> using:   visual.send_data_as_vector(cluster_set);
+    visual.send_points(12, &pnts[0][0]);
+    visual.send_points(12, &pnts[0][0], points_categories, categories);		// Possible flags: CATEGORIES, COLORS, GRADIENT.
+    visual.send_points(12, &pnts[0][0], points_categories);					// By default, interpreted as CATEGORIES
+
+    visual.send_points(12, &pnts[0][0], &points_colors[0][0], colors);
+
+    visual.send_palette(&points_gradient_palette[0][0], 21, points);
+    visual.send_points(12, &pnts[0][0], points_gradients, gradient, 1, 12);
+    visual.send_points(12, &pnts[0][0], points_gradients, gradient, 6, 7);
 
 	// Draw cubes -------------------------------
 	cube3D myCubes[3] = {
@@ -26,11 +73,51 @@ int main() {
 			cube3D(1, 1, 1, 2, 1, 0.5, 0.3*3.1415, 0),
 			cube3D(1, -1, 0, 1, 0.5, 0.1, 0.6*3.1415, 0)
 	};
+    float cubes_categories[3] = {0, 1, 2};
+    float cubes_colors[3][3] = {
+        0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 1.0f,
+        0.0f, 1.0f, 1.0f
+    };
+    float cubes_gradients[3] = {1,6,12};
+    float cubes_gradient_palette[21][3] = {
+        0.0f, 0.0f, 0.00f,
+        0.0f, 0.0f, 0.05f,
+        0.0f, 0.0f, 0.10f,
+        0.0f, 0.0f, 0.15f,
+        0.0f, 0.0f, 0.20f,
+        0.0f, 0.0f, 0.25f,
+        0.0f, 0.0f, 0.30f,
+        0.0f, 0.0f, 0.35f,
+        0.0f, 0.0f, 0.40f,
+        0.0f, 0.0f, 0.45f,
+        0.0f, 0.0f, 0.50f,
+        0.0f, 0.0f, 0.55f,
+        0.0f, 0.0f, 0.60f,
+        0.0f, 0.0f, 0.65f,
+        0.0f, 0.0f, 0.70f,
+        0.0f, 0.0f, 0.75f,
+        0.0f, 0.0f, 0.80f,
+        0.0f, 0.0f, 0.85f,
+        0.0f, 0.0f, 0.90f,
+        0.0f, 0.0f, 0.95f,
+        0.0f, 0.0f, 1.00f
+    };
 
-	visual.send_cubes(2, myCubes);                  // Load boxes on the visualizer
+    // >>> Different ways of drawing cubes
+    visual.send_cubes(2, myCubes);                                          // Load boxes on the visualizer
+
+    visual.send_cubes(3, myCubes, cubes_categories, categories);            // Possible flags: CATEGORIES, COLORS, GRADIENT.
+    visual.send_cubes(3, myCubes, cubes_categories);                        // By default, interpreted as CATEGORIES
+
+    visual.send_cubes(3, myCubes, &cubes_colors[0][0], colors);
+
+    visual.send_palette(&cubes_gradient_palette[0][0], 21, cubes);
+    visual.send_cubes(3, myCubes, cubes_gradients, gradient, 1, 12);
+    visual.send_cubes(3, myCubes, cubes_gradients, gradient, 0, 0);
 
 	// Draw lines -------------------------------
-	float box[9][3] = {									// Fill an array
+    float box[9][3] = {
 		-3,  3,  3,
 		-3, -3,  3,
 		 3, -3,  3,
@@ -39,34 +126,180 @@ int main() {
 		 3, -3, -3,
 		-3, -3, -3,
 		-3,  3, -3,
-		-3,  3,  3
-	};
-
+        -3,  3,  3 };
 	//visual.send_lines(9, &join_points[0][0]);					// Load points that will be used to draw lines
 
 	float parable[101][3];
-	pol_3th_degree(&parable[0][0], -10, 10, 100, 0, 0, 1, 0);	// Fill another array
-
+    visual.pol_3th_degree(&parable[0][0], -10, 10, 100, 0, 0, 1, 0);	// Fill another array
 	//visual.send_lines(101, &pol_3th[0][0]);					// Erase the previous lines-buffer and draws a new one
 
-	float two_lines[101 + 1 + 9][3];							// Fill this array with the 2 lines we created previously + one line jump between them
+    float myLines[101 + 1 + 9][3];							// Fill this array with the 2 lines we created previously + one line jump between them
 	int i;
 	for (i = 0; i < 101; i++) {
-		two_lines[i][0] = parable[i][0];
-		two_lines[i][1] = parable[i][1];
-		two_lines[i][2] = parable[i][2];
+        myLines[i][0] = parable[i][0];
+        myLines[i][1] = parable[i][1];
+        myLines[i][2] = parable[i][2];
 	}
-	two_lines[i][0] = 1.2f;				// This points signals a jump between lines
-	two_lines[i][1] = 3.4f;
-	two_lines[i][2] = 5.6f;
+    myLines[i][0] = 1.2f;				// This points signals a jump between lines
+    myLines[i][1] = 3.4f;
+    myLines[i][2] = 5.6f;
 	i++;
 	for (int j = 0; j < 9; j++) {
-		two_lines[i + j][0] = box[j][0];
-		two_lines[i + j][1] = box[j][1];
-		two_lines[i + j][2] = box[j][2];
+        myLines[i + j][0] = box[j][0];
+        myLines[i + j][1] = box[j][1];
+        myLines[i + j][2] = box[j][2];
 	}
 
-	visual.send_lines(111, &two_lines[0][0]);					// Send lines and draw them
+    float lines_categories[101 + 1 + 9 - 1] = {     // Send a category for each segment (number of segments = number of points - 1)
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        5, 5,       // << These two segments are the line jump. They are not going to be displayed on screen
+        1, 1, 1, 1, 2, 2, 2, 2
+    };
+
+    float lines_colors[101 + 1 + 9 - 1][3] = {      // Send a color for each segment (number of segments = number of points - 1)
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+        1.0f, 0.0f, 0.0,
+
+        0.0f, 0.0f, 0.0,          // << This is the line jump
+        0.0f, 0.0f, 0.0f,
+
+        0.0f, 1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f
+    };
+
+    // >>> Different ways of drawing lines
+    visual.send_lines(111, &myLines[0][0]);
+
+    visual.send_lines(111, &myLines[0][0], &lines_categories[0], categories);        // Possible flags: CATEGORIES, COLORS, GRADIENT.
+    visual.send_lines(111, &myLines[0][0], &lines_categories[0]);                    // By default, interpreted as CATEGORIES
+
+    visual.send_lines(111, &myLines[0][0], &lines_colors[0][0], colors);
+
+    //visual.send_palette(&cubes_gradient_palette[0][0], 21, lines);
+    //visual.send_lines(111, &myLines[0][0], cubes_gradients, gradient, 1, 12);
+    //visual.send_lines(111, &myLines[0][0], cubes_gradients, gradient, 0, 0);
+
+
+	// Send data to the "data window" --------------
+	std::string additional_data[10] = 
+	{
+		"You can send data to this \"data window\"",
+		"You only have to call the method \"fill_data_window\"",
+		"Pass a pointer to an array of 10 strings to it",
+		"The method will publish one string per line",
+		"The empty strings (=\"\") won't be published",
+		"", "", "", "", ""
+	};
+
+	visual.fill_data_window(additional_data);
 
     //std::this_thread::sleep_for(std::chrono::seconds(60));
     std::cin >> i;
@@ -138,18 +371,4 @@ void icosahedron(float side_length, float(*points)[3]) {
 	points[11][0] = 0.;
 	points[11][1] = -Y1;
 	points[11][2] = 0.;
-}
-
-void pol_3th_degree(float *results_array, float xmin, float xmax, float sample, float a, float b, float c, float d) {
-
-	float step = (xmax - xmin) / sample;
-	int counter = 0;
-	for (int i = 0; i <= sample; i++)
-	{
-		results_array[i * 3 + 0] = xmin;
-		results_array[i * 3 + 1] = a + b * xmin + c * xmin*xmin + d * xmin*xmin*xmin;
-		results_array[i * 3 + 2] = 0;
-
-		xmin += step;
-	}
 }

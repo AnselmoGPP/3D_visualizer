@@ -21,7 +21,7 @@ class controls {
 	// Mouse
 	double xpos, ypos;
 	double xpos0, ypos0;
-	bool L_pressed, R_pressed;
+	bool L_pressed, R_pressed, scroll_pressed;
 
 	// camera parameters
 	glm::vec3 position;
@@ -36,7 +36,6 @@ class controls {
 	float minimum_radius;
     float right_speed;
 
-	int camera_mode;
 	glm::mat4 ViewMatrix;
 	glm::mat4 ProjectionMatrix;
 
@@ -44,7 +43,8 @@ class controls {
 	void computeMatricesFromInputs_spherical(GLFWwindow*);
 
 public:
-	controls(int mode = FPS);
+	int camera_mode;
+	controls(int mode = SPHERE);
 	void adjustments(GLFWwindow *window);
 	void computeMatricesFromInputs(GLFWwindow* window);
 
