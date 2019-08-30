@@ -11,19 +11,13 @@
 *		- Be careful with static variables. They may make multiple windows problematic
 *
 *       > Parameters window (toolbar) (camera, transparency, axis...)
-*       > Categories arrays
-*       > Colors arrays optional
 *       - Shaper with loop and without it
-*		> Camera: Right mouse button moves sphere_center in the plane perpendicular to the line of vision.
 *		> Multilayer themes:
 *			- Enter checkbox names
-*       - Change palette
 *       - Dynamic memory for palette and layer buffers
 *       - HSI-RGB conversor for changing palette    https://es.wikipedia.org/wiki/Modelo_de_color_HSL
 *       - Ordenar buffer para cubos para perfecta transparencia
 */
-
-
 
 #pragma once
 
@@ -66,6 +60,149 @@ struct cube3D {
 	// Parameters: x, y, z (cube's center), width, height, length, rot_H (horizontal rotation), rot_V (vertical rotation)
 	cube3D(float x, float y, float z, float w, float h, float l, float rh, float rv) :
 		X(x), Y(y), Z(z), width(w), height(h), length(l), rot_H(rh), rot_V(rv) { }
+};
+
+struct layer_system {
+
+	layer_system(
+		unsigned int point_lay = 0,		std::string *point_names = nullptr,		unsigned int *max_points = 0,
+		unsigned int line_lay = 0,		std::string *line_names = nullptr,		unsigned int *max_lines = 0,
+		unsigned int cubes_lay = 0,		std::string *cube_names = nullptr,		unsigned int *max_cubes = 0,
+		unsigned int triangles_lay = 0,	std::string *triangle_names = nullptr,	unsigned int *max_triangles = 0
+	) : 
+		point_layers(point_lay), line_layers(line_lay), cube_layers(cubes_lay), triangle_layers(triangles_lay) { 
+
+		point_layers_names = new std::string[point_layers];
+		for (int i = 0; i < point_layers; i++) 
+			point_layers_names[i] = point_names[i];
+
+		line_layers_names = new std::string[line_layers];
+		for (int i = 0; i < line_layers; i++)
+			line_layers_names[i] = line_names[i];
+	
+		cube_layers_names = new std::string[cube_layers];
+		for (int i = 0; i < cube_layers; i++)
+			cube_layers_names[i] = cube_names[i];
+
+		triangle_layers_names = new std::string[triangle_layers];
+		for (int i = 0; i < triangle_layers; i++)
+			triangle_layers_names[i] = triangle_names[i];
+	}
+
+	~layer_system() {
+
+		delete [] point_layers_names;
+		delete [] max_points;
+
+		delete [] line_layers_names;
+		delete [] max_lines;
+
+		delete [] cube_layers_names;
+		delete [] max_cubes;
+
+		delete [] triangle_layers_names;
+		delete [] max_triangles;
+	}
+
+	layer_system(const layer_system &obj) {
+
+		point_layers = obj.point_layers;
+		line_layers = obj.line_layers;
+		cube_layers = obj.cube_layers;
+		triangle_layers = obj.triangle_layers;
+
+
+		point_layers_names = new std::string[point_layers];
+		for (int i = 0; i < point_layers; i++)
+			point_layers_names[i] = obj.point_layers_names[i];
+
+		line_layers_names = new std::string[line_layers];
+		for (int i = 0; i < line_layers; i++)
+			line_layers_names[i] = obj.line_layers_names[i];
+
+		cube_layers_names = new std::string[cube_layers];
+		for (int i = 0; i < cube_layers; i++)
+			cube_layers_names[i] = obj.cube_layers_names[i];
+
+		triangle_layers_names = new std::string[triangle_layers];
+		for (int i = 0; i < triangle_layers; i++)
+			triangle_layers_names[i] = obj.triangle_layers_names[i];
+
+
+		max_points = new unsigned int[point_layers];
+		for (int i = 0; i < point_layers; i++)
+			max_points[i] = obj.max_points[i];
+
+		max_lines = new unsigned int[line_layers];
+		for (int i = 0; i < line_layers; i++)
+			max_lines[i] = obj.max_lines[i];
+
+		max_cubes = new unsigned int[cube_layers];
+		for (int i = 0; i < cube_layers; i++)
+			max_cubes[i] = obj.max_cubes[i];
+
+		max_triangles = new unsigned int[triangle_layers];
+		for (int i = 0; i < triangle_layers; i++)
+			max_triangles[i] = obj.max_triangles[i];
+	}
+
+	layer_system& operator=(const layer_system &obj) {
+
+		point_layers = obj.point_layers;
+		line_layers = obj.line_layers;
+		cube_layers = obj.cube_layers;
+		triangle_layers = obj.triangle_layers;
+
+
+		point_layers_names = new std::string[point_layers];
+		for (int i = 0; i < point_layers; i++)
+			point_layers_names[i] = obj.point_layers_names[i];
+
+		line_layers_names = new std::string[line_layers];
+		for (int i = 0; i < line_layers; i++)
+			line_layers_names[i] = obj.line_layers_names[i];
+
+		cube_layers_names = new std::string[cube_layers];
+		for (int i = 0; i < cube_layers; i++)
+			cube_layers_names[i] = obj.cube_layers_names[i];
+
+		triangle_layers_names = new std::string[triangle_layers];
+		for (int i = 0; i < triangle_layers; i++)
+			triangle_layers_names[i] = obj.triangle_layers_names[i];
+
+
+		max_points = new unsigned int[point_layers];
+		for (int i = 0; i < point_layers; i++)
+			max_points[i] = obj.max_points[i];
+
+		max_lines = new unsigned int[line_layers];
+		for (int i = 0; i < line_layers; i++)
+			max_lines[i] = obj.max_lines[i];
+
+		max_cubes = new unsigned int[cube_layers];
+		for (int i = 0; i < cube_layers; i++)
+			max_cubes[i] = obj.max_cubes[i];
+
+		max_triangles = new unsigned int[triangle_layers];
+		for (int i = 0; i < triangle_layers; i++)
+			max_triangles[i] = obj.max_triangles[i];
+	}
+
+	unsigned int point_layers;
+	std::string *point_layers_names;
+	unsigned int *max_points;
+
+	unsigned int line_layers;
+	std::string *line_layers_names;
+	unsigned int *max_lines;
+
+	unsigned int cube_layers;
+	std::string *cube_layers_names;
+	unsigned int *max_cubes;
+
+	unsigned int triangle_layers;
+	std::string *triangle_layers_names;
+	unsigned int *max_triangles;
 };
 
 // Define some maximum number of elements:
@@ -153,14 +290,16 @@ public:
 
 	// Send points to print. Optionally, include an additional array with the category of each point (cluster) or the color of each point, and specify what type of array it is:
     // - 'categories': Should be numbers starting from 0 to the number of categories - 1. When don't specified, the additional array is considered 'categories'.
-    // - 'gradient': Must include the minimum and maximum values. If not specified, the minimum is 0 and the maximum is 1.
+    // - 'gradient': Must include the minimum and maximum values (inclusive). If not specified, the minimum is 0 and the maximum is 1.
     // - 'colors'
 	// For more info, look at the macros definition (visualizerClass.hpp).
 	// When no category or color array is sent, points are black.
     void send_points(int number_points, const float *arr, const float *labels = nullptr, data_buffer array_type = categories, float min = 0, float max = 1);
 
 	// Send an array containing the points coordinates you want to bind with lines, and the number of points you want to use, including the gap-points with coordinates (1.2, 3.4, 5.6) (include this number in the number of points).
-    void send_lines(int number_points, const float *points, const float *labels = nullptr, data_buffer array_type = categories, float min = 0, float max = 1);
+    void send_lines(int number_lines, const float *points, const float *labels = nullptr, data_buffer array_type = categories, float min = 0, float max = 1);
+
+	void send_triangles(int number_triangles, const float *points, const float *labels = nullptr, data_buffer array_type = categories, float min = 0, float max = 1);
 
     // Send array of cubes (cube3D) to print them
     void send_cubes(int number_cubes, const cube3D *arr, const float *labels = nullptr, data_buffer array_type = categories, float min = 0, float max = 1);
@@ -175,6 +314,9 @@ public:
 
     // This represents the function [ y(x) = a + bx + cx^2 + dx^3 ]. It outputs the y value for the inclusive range [xmin, xmax] (including extremes). The sample variable is the number of segments (the result_array will store 'sample' + 1 elements)
     void pol_3th_degree(float *results_array, float xmin, float xmax, float sample, float a, float b, float c, float d);
+
+	// Pass a pointer to an array[12][3] to store the icosahedron vertices. You must provide the radius too.
+	void icosahedron(float side_length, float(*points)[3]);
 
     // Obsolete -------------------------------------
 

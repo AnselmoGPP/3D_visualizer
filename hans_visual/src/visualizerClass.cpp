@@ -4,6 +4,7 @@
 
 visualizerClass::visualizerClass(){
 
+	// Get colors palette ready
     float temp_pal[21][3] =
     {
                       {1.0f,	0.0f,	0.00f},
@@ -142,6 +143,7 @@ void visualizerClass::send_lines(int number_lines, const float *points, const fl
     lines_to_print = 0;
     int omitted_segments = 0;
     int index = 0;
+	float siz = max - min;
 
     std::lock_guard<std::mutex> lock_points(mut_lines);
 
@@ -210,11 +212,29 @@ void visualizerClass::send_lines(int number_lines, const float *points, const fl
         }
         else if (array_type == gradient)
         {
+			if (labels[i] < min) index = 0;
+			else if (labels[i] > max) index = lines_palette_size - 1;
+			else {
+				index = ((labels[i] - min) * (lines_palette_size - 1)) / siz;
+			}
 
+			lines_colors_buffer[i - omitted_segments][0][0] = lines_palette[index][0];
+			lines_colors_buffer[i - omitted_segments][0][1] = lines_palette[index][1];
+			lines_colors_buffer[i - omitted_segments][0][2] = lines_palette[index][2];
+			lines_colors_buffer[i - omitted_segments][0][3] = lines_alpha_channel;
+
+			lines_colors_buffer[i - omitted_segments][1][0] = lines_palette[index][0];
+			lines_colors_buffer[i - omitted_segments][1][1] = lines_palette[index][1];
+			lines_colors_buffer[i - omitted_segments][1][2] = lines_palette[index][2];
+			lines_colors_buffer[i - omitted_segments][1][3] = lines_alpha_channel;
         }
 
         ++lines_to_print;
     }
+}
+
+void visualizerClass::send_triangles(int number_triangles, const float *points, const float *labels, data_buffer array_type, float min, float max) {
+
 }
 
 void visualizerClass::send_cubes(int number_cubes, const cube3D *arr, const float *labels, data_buffer array_type, float min, float max) {
@@ -512,6 +532,73 @@ void visualizerClass::pol_3th_degree(float *results_array, float xmin, float xma
     }
 }
 
+void visualizerClass::icosahedron(float side_length, float(*points)[3]) {
+
+	float S = side_length;
+	const float pi = 3.14159265359;
+	float t1 = 2 * pi / 5;
+	float t2 = (pi / 2) - t1;
+	float t4 = t1 / 2;
+	float t3 = t4 - pi / 10;
+
+	float R = (S / 2) / std::sin(t4);
+	float H = std::cos(t4) * R;
+	float Cx = R * std::sin(t2);
+	float Cz = R * std::cos(t2);
+	float H1 = std::sqrt(S * S - R * R);
+	float H2 = std::sqrt((H + R) * (H + R) - H * H);
+	float Y2 = (H2 - H1) / 2;
+	float Y1 = Y2 + H1;
+
+	points[0][0] = 0.;
+	points[0][1] = Y1;
+	points[0][2] = 0.;
+
+	points[1][0] = R;
+	points[1][1] = Y2;
+	points[1][2] = 0.;
+
+	points[2][0] = Cx;
+	points[2][1] = Y2;
+	points[2][2] = Cz;
+
+	points[3][0] = -H;
+	points[3][1] = Y2;
+	points[3][2] = S / 2;
+
+	points[4][0] = -H;
+	points[4][1] = Y2;
+	points[4][2] = -S / 2;
+
+	points[5][0] = Cx;
+	points[5][1] = Y2;
+	points[5][2] = -Cz;
+
+	points[6][0] = -R;
+	points[6][1] = -Y2;
+	points[6][2] = 0.;
+
+	points[7][0] = -Cx;
+	points[7][1] = -Y2;
+	points[7][2] = -Cz;
+
+	points[8][0] = H;
+	points[8][1] = -Y2;
+	points[8][2] = -S / 2;
+
+	points[9][0] = H;
+	points[9][1] = -Y2;
+	points[9][2] = S / 2;
+
+	points[10][0] = -Cx;
+	points[10][1] = -Y2;
+	points[10][2] = Cz;
+
+	points[11][0] = 0.;
+	points[11][1] = -Y1;
+	points[11][2] = 0.;
+}
+
 // Obsolete functions ----------
 
 void visualizerClass::send_data_as_vector(std::vector<std::vector<pnt3D>>& vecPoints) {
@@ -627,6 +714,8 @@ int visualizerClass::run_thread() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glEnable(GL_PROGRAM_POINT_SIZE);			// Enable GL_POINTS
+	glEnable(GL_POINT_SMOOTH);					// For circular points (doesn't work)
+	glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);	// For circular points (doesn't work)
     glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
     glPointSize(5.0);
 

@@ -4,9 +4,6 @@
 #include <cmath>
 #include <chrono>
 
-// Pass a pointer of an array[12][3] to store the icosahedron vertices
-void icosahedron(float side_length, float(*points)[3]);
-
 int main() {
 
 	visualizerClass visual;
@@ -14,7 +11,7 @@ int main() {
 
 	// Draw points ------------------------------
     float pnts[12][3];
-    icosahedron(2, &pnts[0]);						// Fill the icos[] array with points coordinates (in this case 12 points, with 3 coordinates each)
+    visual.icosahedron(2, &pnts[0]);						// Fill the icos[] array with points coordinates (in this case 12 points, with 3 coordinates each)
     float points_categories[12] = { 0,1,2,3,4,5,6,7,8,10,10,10 };
     float points_colors[12][3] = {
 		1.0f, 0.0f, 0.0f,
@@ -30,7 +27,6 @@ int main() {
 		0.0f, 0.0f, 1.0f,
 		0.0f, 0.0f, 1.0f
 	};
-    float points_gradients[12] = {1,2,3,4,5,6,7,8,9,10,11,12};
     float points_gradient_palette[21][3] = {
         0.0f, 0.0f, 0.00f,
         0.0f, 0.0f, 0.05f,
@@ -54,6 +50,7 @@ int main() {
         0.0f, 0.0f, 0.95f,
         0.0f, 0.0f, 1.00f
     };
+	float points_gradients[12] = { 1,2,3,4,5,6,7,8,9,10,11,12 };
 
     // >>> Different ways of drawing points
     //visual.send_data_as_array(12, &icos[0][0]);       // Load the points on the visualizer. You can also load them from a vector<vector<pnt3D>> using:   visual.send_data_as_vector(cluster_set);
@@ -79,7 +76,6 @@ int main() {
         0.0f, 0.0f, 1.0f,
         0.0f, 1.0f, 1.0f
     };
-    float cubes_gradients[3] = {1,6,12};
     float cubes_gradient_palette[21][3] = {
         0.0f, 0.0f, 0.00f,
         0.0f, 0.0f, 0.05f,
@@ -103,6 +99,7 @@ int main() {
         0.0f, 0.0f, 0.95f,
         0.0f, 0.0f, 1.00f
     };
+	float cubes_gradients[3] = { 1,6,12 };
 
     // >>> Different ways of drawing cubes
     visual.send_cubes(2, myCubes);                                          // Load boxes on the visualizer
@@ -275,6 +272,127 @@ int main() {
         0.0f, 1.0f, 0.0f
     };
 
+	float lines_gradient_palette[101][3] = {
+		0.00f, 0.0f, 0.0f,
+		0.01f, 0.0f, 0.0f,
+		0.02f, 0.0f, 0.0f,
+		0.03f, 0.0f, 0.0f,
+		0.04f, 0.0f, 0.0f,
+		0.05f, 0.0f, 0.0f,
+		0.06f, 0.0f, 0.0f,
+		0.07f, 0.0f, 0.0f,
+		0.08f, 0.0f, 0.0f,
+		0.09f, 0.0f, 0.0f,
+
+		0.10f, 0.0f, 0.0f,
+		0.11f, 0.0f, 0.0f,
+		0.12f, 0.0f, 0.0f,
+		0.13f, 0.0f, 0.0f,
+		0.14f, 0.0f, 0.0f,
+		0.15f, 0.0f, 0.0f,
+		0.16f, 0.0f, 0.0f,
+		0.17f, 0.0f, 0.0f,
+		0.18f, 0.0f, 0.0f,
+		0.19f, 0.0f, 0.0f,
+
+		0.20f, 0.0f, 0.0f,
+		0.21f, 0.0f, 0.0f,
+		0.22f, 0.0f, 0.0f,
+		0.23f, 0.0f, 0.0f,
+		0.24f, 0.0f, 0.0f,
+		0.25f, 0.0f, 0.0f,
+		0.26f, 0.0f, 0.0f,
+		0.27f, 0.0f, 0.0f,
+		0.28f, 0.0f, 0.0f,
+		0.29f, 0.0f, 0.0f,
+
+		0.30f, 0.0f, 0.0f,
+		0.31f, 0.0f, 0.0f,
+		0.32f, 0.0f, 0.0f,
+		0.33f, 0.0f, 0.0f,
+		0.34f, 0.0f, 0.0f,
+		0.35f, 0.0f, 0.0f,
+		0.36f, 0.0f, 0.0f,
+		0.37f, 0.0f, 0.0f,
+		0.38f, 0.0f, 0.0f,
+		0.39f, 0.0f, 0.0f,
+
+		0.40f, 0.0f, 0.0f,
+		0.41f, 0.0f, 0.0f,
+		0.42f, 0.0f, 0.0f,
+		0.43f, 0.0f, 0.0f,
+		0.44f, 0.0f, 0.0f,
+		0.45f, 0.0f, 0.0f,
+		0.46f, 0.0f, 0.0f,
+		0.47f, 0.0f, 0.0f,
+		0.48f, 0.0f, 0.0f,
+		0.49f, 0.0f, 0.0f,
+
+		0.50f, 0.0f, 0.0f,
+		0.51f, 0.0f, 0.0f,
+		0.52f, 0.0f, 0.0f,
+		0.53f, 0.0f, 0.0f,
+		0.54f, 0.0f, 0.0f,
+		0.55f, 0.0f, 0.0f,
+		0.56f, 0.0f, 0.0f,
+		0.57f, 0.0f, 0.0f,
+		0.58f, 0.0f, 0.0f,
+		0.59f, 0.0f, 0.0f,
+
+		0.60f, 0.0f, 0.0f,
+		0.61f, 0.0f, 0.0f,
+		0.62f, 0.0f, 0.0f,
+		0.63f, 0.0f, 0.0f,
+		0.64f, 0.0f, 0.0f,
+		0.65f, 0.0f, 0.0f,
+		0.66f, 0.0f, 0.0f,
+		0.67f, 0.0f, 0.0f,
+		0.68f, 0.0f, 0.0f,
+		0.69f, 0.0f, 0.0f,
+
+		0.70f, 0.0f, 0.0f,
+		0.71f, 0.0f, 0.0f,
+		0.72f, 0.0f, 0.0f,
+		0.73f, 0.0f, 0.0f,
+		0.74f, 0.0f, 0.0f,
+		0.75f, 0.0f, 0.0f,
+		0.76f, 0.0f, 0.0f,
+		0.77f, 0.0f, 0.0f,
+		0.78f, 0.0f, 0.0f,
+		0.79f, 0.0f, 0.0f,
+
+		0.80f, 0.0f, 0.0f,
+		0.81f, 0.0f, 0.0f,
+		0.82f, 0.0f, 0.0f,
+		0.83f, 0.0f, 0.0f,
+		0.84f, 0.0f, 0.0f,
+		0.85f, 0.0f, 0.0f,
+		0.86f, 0.0f, 0.0f,
+		0.87f, 0.0f, 0.0f,
+		0.88f, 0.0f, 0.0f,
+		0.89f, 0.0f, 0.0f,
+
+		0.90f, 0.0f, 0.0f,
+		0.91f, 0.0f, 0.0f,
+		0.92f, 0.0f, 0.0f,
+		0.93f, 0.0f, 0.0f,
+		0.94f, 0.0f, 0.0f,
+		0.95f, 0.0f, 0.0f,
+		0.96f, 0.0f, 0.0f,
+		0.97f, 0.0f, 0.0f,
+		0.98f, 0.0f, 0.0f,
+		0.99f, 0.0f, 0.0f,
+
+		1.00f, 0.0f, 0.0f
+	};
+
+	float lines_gradients[101 + 1 + 9 - 1] = {
+		10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,
+		60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,
+		10,10,
+		10,24,36,50,63,77,92,109
+	};
+
     // >>> Different ways of drawing lines
     visual.send_lines(111, &myLines[0][0]);
 
@@ -283,9 +401,9 @@ int main() {
 
     visual.send_lines(111, &myLines[0][0], &lines_colors[0][0], colors);
 
-    //visual.send_palette(&cubes_gradient_palette[0][0], 21, lines);
-    //visual.send_lines(111, &myLines[0][0], cubes_gradients, gradient, 1, 12);
-    //visual.send_lines(111, &myLines[0][0], cubes_gradients, gradient, 0, 0);
+    visual.send_palette(&lines_gradient_palette[0][0], 101, lines);
+    visual.send_lines(111, &myLines[0][0], lines_gradients, gradient, 10, 109);
+    visual.send_lines(111, &myLines[0][0], lines_gradients, gradient, 0, 0);
 
 
 	// Send data to the "data window" --------------
@@ -304,71 +422,4 @@ int main() {
     //std::this_thread::sleep_for(std::chrono::seconds(60));
     std::cin >> i;
     return 0;
-}
-
-void icosahedron(float side_length, float(*points)[3]) {
-
-	float S = side_length;
-	const float pi = 3.14159265359;
-	float t1 = 2 * pi / 5;
-	float t2 = (pi / 2) - t1;
-	float t4 = t1 / 2;
-	float t3 = t4 - pi / 10;
-
-	float R = (S / 2) / std::sin(t4);
-	float H = std::cos(t4) * R;
-	float Cx = R * std::sin(t2);
-	float Cz = R * std::cos(t2);
-	float H1 = std::sqrt(S * S - R * R);
-	float H2 = std::sqrt((H + R) * (H + R) - H * H);
-	float Y2 = (H2 - H1) / 2;
-	float Y1 = Y2 + H1;
-
-	points[0][0] = 0.;
-	points[0][1] = Y1;
-	points[0][2] = 0.;
-
-	points[1][0] = R;
-	points[1][1] = Y2;
-	points[1][2] = 0.;
-
-	points[2][0] = Cx;
-	points[2][1] = Y2;
-	points[2][2] = Cz;
-
-	points[3][0] = -H;
-	points[3][1] = Y2;
-	points[3][2] = S / 2;
-
-	points[4][0] = -H;
-	points[4][1] = Y2;
-	points[4][2] = -S / 2;
-
-	points[5][0] = Cx;
-	points[5][1] = Y2;
-	points[5][2] = -Cz;
-
-	points[6][0] = -R;
-	points[6][1] = -Y2;
-	points[6][2] = 0.;
-
-	points[7][0] = -Cx;
-	points[7][1] = -Y2;
-	points[7][2] = -Cz;
-
-	points[8][0] = H;
-	points[8][1] = -Y2;
-	points[8][2] = -S / 2;
-
-	points[9][0] = H;
-	points[9][1] = -Y2;
-	points[9][2] = S / 2;
-
-	points[10][0] = -Cx;
-	points[10][1] = -Y2;
-	points[10][2] = Cz;
-
-	points[11][0] = 0.;
-	points[11][1] = -Y1;
-	points[11][2] = 0.;
 }

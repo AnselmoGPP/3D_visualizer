@@ -1,6 +1,6 @@
 # Visualizer class
 
-This is a library for 3D visualization using OpenGL. It contains a class called "visualizerClass" that takes care of everything you need for drawing points, lines and cubes. It also provides other functionalities such as transparencies, layers, runtime comments, polynomials drawing, changing palette color, etc.
+This is a library for 3D visualization using OpenGL. It contains a class called "visualizerClass" that takes care of everything you need for drawing points, lines and cubes. It also provides other functionalities such as transparencies, layers, runtime comments, polynomials drawing, changing palette color, etc. There are 3 fixed layers, one for each object (points, lines, cubes).
 
 After building using the provided CMakeLists.txt, this library compiles in Ubuntu (make) and Windows (MVS) .
 

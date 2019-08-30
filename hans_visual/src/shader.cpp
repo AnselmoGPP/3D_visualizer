@@ -35,7 +35,7 @@ GLuint LoadShaders(){
 		"	//gl_PointSize = pointSize; \n"
 		"} \n";
 
-
+	
 	std::string FragmentShaderCode =
 		"#version 330 core \n"
 
